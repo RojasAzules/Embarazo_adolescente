@@ -2,3 +2,5 @@ data/raw/*
 data/interim/nacimientos/conteo*.csv
 .Rproj*
 .DS_Store
+.RData
+.Rhistory
