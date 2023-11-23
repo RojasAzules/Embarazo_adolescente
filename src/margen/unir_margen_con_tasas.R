@@ -1,26 +1,27 @@
 # library(tidyverse)
 
-
 eleccion <- read_csv('data/interim/margen/eleccionConMargen.csv') %>%
   filter(yr > 1985,
          yr < 2021,
          str_detect(partidos, 'pan')) %>%
   mutate(Muni    = as.numeric(inegi) - edon*1000) %>%
-  rename(Anho    = yr,
+  rename(Anho = yr,
          Estado  = edon) %>%
-  mutate(Anho_1  = Anho + 1,
-         Anho_2  = Anho + 2,
-         Anho_3  = Anho + 3,
-         Anho_4  = Anho + 4,
-         Anho_5  = Anho + 5,
-         Anho_6  = Anho + 6,
-         Anho_7  = Anho + 7,
-         Anho_8  = Anho + 8,
-         Anho_9  = Anho + 9,
-         Anho_10 = Anho + 10)
+  mutate(Anho_01  = Anho + 1,
+         Anho_02  = Anho + 2,
+         Anho_03  = Anho + 3,
+         Anho_04  = Anho + 4,
+         Anho_05  = Anho + 5,
+         Anho_06  = Anho + 6,
+         Anho_07  = Anho + 7,
+         Anho_08  = Anho + 8,
+         Anho_09  = Anho + 9,
+         Anho_10  = Anho + 10,
+         Anho_m1  = Anho - 1)
 
-tasas <- read_csv('data/interim/poblacion/Poblacion_con_tefa.csv') %>%
-  select(Anho, Estado, Muni, Territorio, tefa)
+tasas <- read_csv('data/interim/poblacion/Poblacion_con_tefa_y_obstetrica.csv') %>%
+  select(Anho, Estado, Muni, Territorio, tefa, nMujeres, t_obstetrica, nEgresos) %>%
+  rename(tobstetrica = t_obstetrica)
 
 eleccion <- eleccion %>%
   left_join(tasas, by = c("Anho" = "Anho",
@@ -28,49 +29,55 @@ eleccion <- eleccion %>%
                           "Muni" = "Muni"))
 
 eleccion <- eleccion %>%
-  left_join(tasas, by = c("Anho_1" = "Anho",
+  left_join(tasas, by = c("Anho_01" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_1")) %>%
-  left_join(tasas, by = c("Anho_2" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_01")) %>%
+  left_join(tasas, by = c("Anho_02" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_2")) %>%
-  left_join(tasas, by = c("Anho_3" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_02")) %>%
+  left_join(tasas, by = c("Anho_03" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_3")) %>%
-  left_join(tasas, by = c("Anho_4" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_03")) %>%
+  left_join(tasas, by = c("Anho_04" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_4")) %>%
-  left_join(tasas, by = c("Anho_5" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_04")) %>%
+  left_join(tasas, by = c("Anho_05" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_5")) %>%
-  left_join(tasas, by = c("Anho_6" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_05")) %>%
+  left_join(tasas, by = c("Anho_06" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_6")) %>%
-  left_join(tasas, by = c("Anho_7" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_06")) %>%
+  left_join(tasas, by = c("Anho_07" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_7")) %>%
-  left_join(tasas, by = c("Anho_8" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_07")) %>%
+  left_join(tasas, by = c("Anho_08" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_8")) %>%
-  left_join(tasas, by = c("Anho_9" = "Anho",
+                          "Territorio" = "Territorio"), suffix = c("", "_08")) %>%
+  left_join(tasas, by = c("Anho_09" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
-                          "Territorio" = "Territorio"), suffix = c("", "_9")) %>%
+                          "Territorio" = "Territorio"), suffix = c("", "_09")) %>%
   left_join(tasas, by = c("Anho_10" = "Anho",
                           "Estado" = "Estado",
                           "Muni" = "Muni",
                           "Territorio" = "Territorio"), suffix = c("", "_10")) %>%
-  select(-Anho_1, -Anho_2, -Anho_3, -Anho_4, -Anho_5,
-         -Anho_6, -Anho_7, -Anho_8, -Anho_9, -Anho_10) %>%
-  relocate(emm, Anho, Estado, Muni, inegi, Territorio, mun)
+  left_join(tasas, by = c("Anho_m1" = "Anho",
+                          "Estado" = "Estado",
+                          "Muni" = "Muni",
+                          "Territorio" = "Territorio"), suffix = c("", "_m1")) %>%
+  select(-Anho_01, -Anho_02, -Anho_03, -Anho_04, -Anho_05,
+         -Anho_06, -Anho_07, -Anho_08, -Anho_09, -Anho_10, -Anho_m1) %>%
+  relocate(emm, Anho, Estado, Muni, inegi, Territorio, mun) %>%
+  rename(tefa_00 = tefa,
+         tobstetrica_00 = tobstetrica)
 
 
 ruta <- './data/interim/margen/'

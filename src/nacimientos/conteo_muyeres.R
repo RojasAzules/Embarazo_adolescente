@@ -104,7 +104,8 @@ poblacion <- rbind(
   recorrer_edad_a_partir_de(2020,-4), # 2016
   recorrer_edad_a_partir_de(2020,-3), # 2017
   recorrer_edad_a_partir_de(2020,-2), # 2018
-  recorrer_edad_a_partir_de(2020,-1)  # 2019
+  recorrer_edad_a_partir_de(2020,-1), # 2019
+  recorrer_edad_a_partir_de(2020, 1)  # 2021
 )
 
 # Se filtra población (adolescente) de 14 a 20 años
